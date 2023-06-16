@@ -8,14 +8,16 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from .forms import SignupForm
-from quiz.models import CustomUser
+from quiz.models import CustomUser, Quiz
 
 @api_view(['GET', 'POST', 'PUT', 'DELETE'])
 @ensure_csrf_cookie
 def home(request):
     user_role = request.user.role
+    existing_quizzes_list = Quiz.objects.all()
     return render(request, "home.html",{
         'user_role': user_role,
+        'existing_quizzes_list': existing_quizzes_list,
     })
 
 
@@ -32,7 +34,7 @@ def signin(request):
             return redirect('home')
         else:
             messages.success(request, "incorrect username or password")
-            return redirect('signin') 
+            return redirect('signin')
     return render(request, "signin.html", {
         'form': form,
     })
@@ -79,3 +81,25 @@ def signout(request):
     logout(request)
     messages.success(request,"Logged out")
     return redirect('signin')
+
+
+@api_view(['GET', 'POST', 'PUT', 'DELETE'])
+@ensure_csrf_cookie
+def create_quiz(request):
+    if request.method == 'POST':
+        quiz_name = request.POST.get('quiz_name')
+        category = request.POST.get('category')
+        number_of_questions = request.POST.get('number_of_questions')
+        required_score_to_pass = request.POST.get('required_score')
+        duration = request.POST.get('duration')
+        if Quiz.objects.filter(quiz_name=quiz_name).exists():
+            messages.success(request, "Quiz name is already taken, Please try a new name")
+            return redirect('home')
+        else:
+            quiz = Quiz.objects.create(quiz_name=quiz_name, category=category, number_of_questions=number_of_questions, 
+                                    required_score_to_pass=required_score_to_pass, duration=duration)
+            quiz.save()
+            messages.success(request, "Quiz has been succesfully created")
+    else:
+        return redirect('home')
+    return redirect('home')
