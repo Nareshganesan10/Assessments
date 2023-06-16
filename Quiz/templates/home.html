@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block content %}
+{% for user in user_list %}
+</br>
+{% if user.is_authenticated and user != request.user %}
+<div class="container">
+  <div class="card">
+      <div class="card-body">
+        <div class="mt-3 mb-4">
+          <form method='POST' action='{% url 'search' %}'>
+            {% csrf_token %}
+          <input type="hidden" name="username" value="{{ user }}">
+          <input type="image" img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava2-bg.webp"
+            class="rounded-circle img-fluid" style="width: 100px;">
+          </form>
+        </div>
+        <h4 class="mb-2">{{user}}</h4>
+        </div>
+      </div>
+    </div> 
+</div></br>
+{% endif %}
+{% endfor %}
+{% endblock content %}
