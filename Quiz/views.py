@@ -13,7 +13,10 @@ from quiz.models import CustomUser
 @api_view(['GET', 'POST', 'PUT', 'DELETE'])
 @ensure_csrf_cookie
 def home(request):
-    return render(request, "home.html",{})
+    user_role = request.user.role
+    return render(request, "home.html",{
+        'user_role': user_role,
+    })
 
 
 @api_view(['GET', 'POST', 'PUT', 'DELETE'])
@@ -61,7 +64,7 @@ def signup(request):
                         return redirect('home')
                     return redirect('signup')
         else:
-            messages.error(request, form.errors)
+            messages.success(request, form.errors)
     else:
         form = SignupForm()
         return render(request, "signup.html", {

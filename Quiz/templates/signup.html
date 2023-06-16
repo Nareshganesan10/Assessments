@@ -23,6 +23,9 @@
     <form class="row g-3 needs-validation" novalidate method='POST' action='{% url 'signup' %}'>
       {% csrf_token %}
       {{form}}
+      {% for field in form %}
+      {{ field.errors }}
+      {% endfor %}
     <div class="col-12">
      <button class="btn btn-primary" type="submit">Create Account</button>
     </div>

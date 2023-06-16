@@ -16,6 +16,7 @@
     <form method = 'POST' class="row g-3 needs-validation" novalidate method='POST' action='{% url 'signin' %}'>
         {% csrf_token %}
           {{form}}
+          {{ field.errors }}
         <div class="col-12">
           <button class="btn btn-primary" type="submit">Login</button>
         </div>

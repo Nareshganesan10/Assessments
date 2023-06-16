@@ -22,3 +22,16 @@ class SignupForm(forms.ModelForm):
     class Meta:
         model = CustomUser
         fields = ["email", "role", "username", "password1", "password2"]
+
+    def clean(self):
+        cleaned_data = super(SignupForm, self).clean()
+        email = cleaned_data.get('email')
+        username = cleaned_data.get('username')
+        password1 = cleaned_data.get('password1')
+        password2 = cleaned_data.get('password2')
+        if password1 != password2:
+            raise forms.ValidationError("The password and Re-confirmation of the password didn't match")
+        elif len(password1) < 8:
+            raise forms.ValidationError("Password must have minimum of 8 character")
+        if "@" not in email:
+            raise forms.ValidationError("Enter a valid email id")
