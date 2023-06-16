@@ -6,17 +6,6 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from quiz.models import CustomUser
 
-# class PostForm(ModelForm):
-#     body = forms.CharField(label='', required=False, widget=forms.TextInput(attrs={
-#         'class': 'form-control',
-#         'required': 'True',
-#         'placeholder': 'Say anything'
-#     }))
-
-#     class Meta:
-#         model = PostModel
-#         fields = ['body']
-
 role = [
         ('Attend Quiz', 'Attend Quiz'),
         ('Present Quiz', 'Present Quiz'),

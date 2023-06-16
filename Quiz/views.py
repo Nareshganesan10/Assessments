@@ -13,29 +13,6 @@ from quiz.models import CustomUser
 @api_view(['GET', 'POST', 'PUT', 'DELETE'])
 @ensure_csrf_cookie
 def home(request):
-    # posts = PostModel.objects.all().order_by('-time_posted')
-    # form = PostForm()
-    # if request.method == 'GET':
-    #     form = PostForm(request.GET)
-
-    # elif request.method != 'POST':
-    #     return render(request, "authenticate/home.html", {
-    #         "posts": posts,
-    #     })
-    # elif request.method == 'POST':
-    #     form = PostForm(request.POST)
-    #     if form.is_valid():
-    #         new_post = form.save(commit=False)
-    #         new_post.username = request.user
-    #         new_post.save()
-    #         messages.success(request, "Posted")
-    #         return redirect("home")
-    #     messages.success(request, "Posted")
-    #     return redirect('home')
-    # context = {
-    #     'form': form,
-    #     'posts': posts,
-    # }
     return render(request, "home.html",{})
 
 
