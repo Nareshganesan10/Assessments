@@ -37,8 +37,6 @@ MESSAGE_TAGS = {
  }
 
 
-# Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -139,4 +137,17 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+
+#to create a custome user along the built in field of User model
 AUTH_USER_MODEL = 'quiz.CustomUser'
+
+
+#to add sessions
+# SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SECURE = False  # or False for development
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+SESSION_COOKIE_SAMESITE = SESSION_COOKIE_SECURE
+
+
+#CSRF
+CSRF_COOKIE_SECURE = True

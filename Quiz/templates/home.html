@@ -1,56 +1,85 @@
 {% extends 'base.html' %}
 {% block content %}
-{% comment %} <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script> {% endcomment %}
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+<style>
+    .top-right {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+    }
+</style>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
 </br>
-{% if user.is_authenticated and user == request.user %}
 <div class="container">
-  <h4 class="mb-2">Welcome {{user}}</h4></br>
-  <div class="card">
-      <div class="card-body">
-        {% if user_role == 'Present Quiz' %}
-        <h4> Create your Quiz <h4>
-        <form class="row g-3" method='POST' action='{% url "create_quiz" %}'>
-          {% csrf_token %}
-          <div class="col-auto">
-            <input type="text" class="form-control" name = "quiz_name" placeholder="Quiz name">
+  <a button class="btn btn-primary top-right" href='{% url 'signout' %}'>Logout</button></a>
+</div>
+</br>
+{% if user.is_authenticated and user == request.user or is_authenticated == True %}
+    <div class="container">
+      <h4 class="mb-2">Welcome {{user}}</h4></br>
+      <div class="card">
+          <div class="card-body">
+            {% if user_role == 'Present Quiz' %}
+            <h4> Create your Quiz <h4>
+            <form class="row g-3" method='POST' action='{% url "create_quiz" %}'>
+              {% csrf_token %}
+              <div class="col-auto">
+                <input type="text" class="form-control" name = "quiz_name" placeholder="Quiz name">
+              </div>
+              <div class="col-auto">
+                <input type="text" class="form-control" name = "category" placeholder="category of your Quiz">
+              </div>
+              <div class="col-auto">
+                <input type="number" class="form-control" name = "number_of_questions" placeholder="Number of questions">
+              </div>
+              <div class="col-auto">
+                <input type="number" class="form-control" name = "required_score" placeholder="Required Score to pass">
+              </div>
+              <div class="form-group">
+                <label for="duration">Select Duration:</label>
+                <select class="form-control" id="duration" name="duration">
+                  <option value="1">1 Hour</option>
+                  <option value="2">2 Hours</option>
+                  <option value="3">3 Hours</option>
+                </select>
+              </div>
+              <div class="col-auto">
+                <button type="submit" class="btn btn-primary mb-3"> Create </button>
+              </div>
+            </form>
+            {% endif %}
           </div>
-          <div class="col-auto">
-            <input type="text" class="form-control" name = "category" placeholder="category of your Quiz">
+          <div class="container">
+          </br>
+            <h4 class="mb-2">Existing Quizzes:</h4>
+            <div class="card-body">
+              {% for quiz in existing_quizzes_list %}
+              <h5 class="card-title">Quiz Name: {{quiz.quiz_name}}</h5>
+              <h6 class="card-subtitle mb-2 text-body-secondary">category: {{quiz.category}}</h6>
+              <p class="card-text">duration(In hours): {{quiz.duration}}</p></br>
+              {% if user_role == 'Present Quiz' %}
+              <form action="{% url "add_questions" %}" method="GET">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary mb-3" name="quiz_name">Add Questions</button>
+              </form>
+              <hr>          
+              {% else %}
+              <a button type="submit" class="btn btn-primary mb-3" href='{% url "start_quiz" %}'> Start Quiz </button></a>\
+            </hr>
+            {% endif %}
+            {% endfor %}
           </div>
-          <div class="col-auto">
-            <input type="number" class="form-control" name = "number_of_questions" placeholder="Number of questions">
-          </div>
-          <div class="col-auto">
-            <input type="number" class="form-control" name = "required_score" placeholder="Required Score to pass">
-          </div>
-          <div class="form-group">
-            <label for="duration">Select Duration:</label>
-            <select class="form-control" id="duration" name="duration">
-              <option value="1">1 Hour</option>
-              <option value="2">2 Hours</option>
-              <option value="3">3 Hours</option>
-            </select>
-          </div>
-          <div class="col-auto">
-            <button type="submit" class="btn btn-primary mb-3"> Create </button>
-          </div>
-        </form>
-        {% else %}
-        {% endif %}
-      </div>
         </div>
-      </br>
-        <h4 class="mb-2">Existing Quizzes:</h4>
-        <div class="card-body">
-          {% for quiz in existing_quizzes_list %}
-          <a href='#' h5 class="card-title">Quiz Name: {{quiz.quiz_name}}</h5><a>
-          <h6 class="card-subtitle mb-2 text-body-secondary">category: {{quiz.category}}</h6>
-          <p class="card-text">duration(In hours): {{quiz.duration}}</p></br>
-          {% endfor %}
-      </div>
-    </div> 
-</div></br>
+        </div> 
+    </div></br>
+{% else %}
+<div class="col-12">
+  <div class="container">
+  </br>
+  <h1>You need to login before continuing</h1>
+</br>
+  <a class="btn btn-primary" href='{% url 'signin' %}' Login="button">Login</a>
+</div>
+</div>
 {% endif %}
 {% endblock content %}

@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% block content %}
+{% if user.is_authenticated and user == request.user %}
+<div class="container">
+  <h4 class="mb-2">Welcome {{user}}</h4></br>
+  <h6 class="mb-2">Your Quiz Name: {{quiz_name}}</h6></br>
+  <div class="card">
+      <div class="card-body">
+        {{user_role}}
+        {% if user_role == 'Present Quiz' %}
+        <head>
+            <title>Add/Delete Form Fields Dynamically</title>
+            <style>
+              .form-field {
+                margin-bottom: 10px;
+              }
+            </style>
+            <script>
+                function addFormField() {
+                    var formContainer = document.getElementById("formContainer");
+                    var fieldCount = formContainer.getElementsByClassName("form-field").length + 1;
+                  
+                    var newField = document.createElement("div");
+                    newField.className = "form-field";
+                  
+                    var label = document.createElement("label");
+                    label.setAttribute("for", "question" + fieldCount);
+                    label.textContent = "Question " + fieldCount + ":";
+                  
+                    var questionInput = document.createElement("input");
+                    questionInput.setAttribute("type", "text");
+                    questionInput.setAttribute("name", "question" + fieldCount);
+                    questionInput.setAttribute("id", "question" + fieldCount);
+                    questionInput.required = true;
+                  
+                    var optionInputs = [];
+                    for (var i = 1; i <= 4; i++) {
+                      var optionInput = document.createElement("input");
+                      optionInput.setAttribute("type", "text");
+                      optionInput.setAttribute("name", "option" + fieldCount + "_" + i);
+                      optionInput.setAttribute("id", "option" + fieldCount + "_" + i);
+                      optionInput.required = true;
+                      optionInputs.push(optionInput);
+                    }
+                  
+                    var deleteButton = document.createElement("button");
+                    deleteButton.type = "button";
+                    deleteButton.textContent = "Delete";
+                    deleteButton.addEventListener("click", function() {
+                      newField.remove();
+                    });
+                  
+                    newField.appendChild(label);
+                    newField.appendChild(questionInput);
+                    for (var i = 0; i < optionInputs.length; i++) {
+                      newField.appendChild(document.createElement("br"));
+                      newField.appendChild(document.createTextNode("Option " + (i + 1) + ":"));
+                      newField.appendChild(optionInputs[i]);
+                    }
+                    newField.appendChild(document.createElement("br"));
+                    newField.appendChild(deleteButton);
+                  
+                    formContainer.appendChild(newField);
+                    
+                    // Attach event listeners for newly created "Delete" buttons
+                    attachDeleteButtonListeners();
+                  }
+                  
+                  function attachDeleteButtonListeners() {
+                    var deleteButtons = document.getElementsByClassName("delete-button");
+                    for (var i = 0; i < deleteButtons.length; i++) {
+                      deleteButtons[i].addEventListener("click", function() {
+                        this.parentElement.remove();
+                      });
+                    }
+                  }                                               
+        </script>
+          </head>
+          <body>
+            <form id="myForm" action="{% url 'add_questions' %}" method="POST">
+                {% csrf_token %}
+              <div id="formContainer">
+                <div class="form-field">
+                    <label for="question1">Question 1:</label>
+                    <textarea class="form-control" name="question" id="question" rows="3" required></textarea>
+                  <label for="corract_answer">Correct Answer:</label>
+                  <input class="form-control" type="text" name="correct_answer" id="correct_answer" required></br>
+                  <label for="option1">Option 1:</label>
+                  <input class="form-control" type="text" name="option1" id="option1" required></br>
+                  <label for="option2">Option 2:</label>
+                  <input class="form-control" type="text" name="option2" id="option2" required></br>
+                  <label for="option3">Option 3:</label>
+                  <input class="form-control" type="text" name="option3" id="option3" required></br>
+                  <label for="option4">Option 4:</label>
+                  <input class="form-control" type="text" name="option4" id="option4" required></br>
+                </div>
+              </div>
+              <button type="button" onclick="addFormField()">+</button>
+              <button type="submit">Submit</button>
+            </form>
+          </body>       
+        {% else %}
+        role isse
+        {% endif %}
+        {% else %}
+        auith issye
+        {% endif %}
+{% endblock content %}
