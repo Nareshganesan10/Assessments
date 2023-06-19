@@ -7,42 +7,44 @@
     <a href="{% url 'home' %}" button class="btn btn-primary d-flex align-items-center btn-danger" type="button">
         <i class="fa fa-angle-left mt-1 mr-1"></i>&nbsp;Exit the quiz
     </button></a></br>
+    <h4>MCQ Quiz</h4>
+{% for question in question_list %}
 </div>
     <div class="d-flex justify-content-center row">
         <div class="col-md-10 col-lg-10">
             <div class="border">
                 <div class="question bg-white p-3 border-bottom">
                     <div class="d-flex flex-row justify-content-between align-items-center mcq">
-                        <h4>MCQ Quiz</h4><span>(5 of 20)</span>
+                        {% comment %} <span>(5 of 20)</span> {% endcomment %}
                     </div>
                 </div>
                 <div class="question bg-white p-3 border-bottom">
                     <div class="d-flex flex-row align-items-center question-title">
                         <h3 class="text-danger">Q.</h3>
-                        <h5 class="mt-1 ml-2">Which of the following country has the largest population?</h5>
+                        <h5 class="mt-1 ml-2">{{question.3}}</h5>
                     </div>
                     <div class="ans ml-2">
                         <label class="radio">
                             <input type="checkbox" name="answer" value="brazil">
-                            <span>Brazil</span>
+                            <span>{{question.4}}</span>
                         </label>
                     </div>
                     <div class="ans ml-2">
                         <label class="radio">
                             <input type="checkbox" name="answer" value="Germany">
-                            <span>Germany</span>
+                            <span>{{question.5}}</span>
                         </label>
                     </div>
                     <div class="ans ml-2">
                         <label class="radio">
                             <input type="checkbox" name="answer" value="Indonesia">
-                            <span>Indonesia</span>
+                            <span>{{question.6}}</span>
                         </label>
                     </div>
                     <div class="ans ml-2">
                         <label class="radio">
                             <input type="checkbox" name="answer" value="Russia">
-                            <span>Russia</span>
+                            <span>{{question.7}}</span>
                         </label>
                     </div>
                 </div>
@@ -53,7 +55,7 @@
                 </div>
             </div>
         </div>
-        
+        {% endfor %}
         <script>
             // JavaScript code to enforce selection of only one option
             const checkboxes = document.querySelectorAll('input[type="checkbox"]');

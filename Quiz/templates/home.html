@@ -62,9 +62,10 @@
                 {% csrf_token %}
                 <button type="submit" class="btn btn-primary mb-3" name="quiz_name">Add Questions</button>
               </form>
+              <button type="submit" class="btn btn-danger mb-3" name="delete-quiz">Delete Quiz</button>
               <hr>          
               {% else %}
-              <a button type="submit" class="btn btn-primary mb-3" href='{% url "start_quiz" %}'> Start Quiz </button></a>\
+              <a button type="submit" class="btn btn-primary mb-3" href='{% url "start_quiz" quiz.quiz_name %}'> Start Quiz </button></a>
             </hr>
             {% endif %}
             {% endfor %}

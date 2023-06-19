@@ -148,8 +148,13 @@ def create_quiz(request):
 #the quiz attender starts answering the questions
 @api_view(['GET', 'POST', 'PUT', 'DELETE'])
 @ensure_csrf_cookie
-def start_quiz(request):
-    return render(request, "start_quiz.html", {})
+def start_quiz(request, quiz_name):
+    quiz_name = quiz_name
+    question = Questions.objects.filter(quiz_name=quiz_name).values_list()
+    return render(request, "start_quiz.html", {
+        "question_list": question,
+        # "number_of_question": len(question),
+    })
 
 
 #the quiz presenter making the question
@@ -177,7 +182,7 @@ def add_questions(request):
         username = CustomUser.objects.get(username=request.user)
         quiz_name = Quiz.objects.get(quiz_name=quiz_name)
         print("quiz",quiz_name.quiz_name)
-        question = Questions.objects.create(username=username, quiz_name=quiz_name.quiz_name,
+        question = Questions.objects.create(username=str(username), quiz_name=quiz_name.quiz_name,
                                             question=question, option1=option1, option2=option2,
                                             option3=option3, option4=option4, correct_answer=correct_answer)
         
