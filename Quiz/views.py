@@ -38,7 +38,6 @@ def home(request):
 @ensure_csrf_cookie
 def signin(request):
     form = AuthenticationForm(request)
-    print(form.errors)
     if request.method == 'POST':
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
@@ -116,9 +115,6 @@ def signout(request):
     response = redirect('signin')
     response.set_cookie(key='username', value='logged_out')
     response.set_cookie(key='is_authenticated', value=False)
-    # session_key = request.session.session_key
-    # SessionStore(session_key=session_key).delete()
-    # request.session.flush()
     messages.success(request,"Logged out")
     return response
 
@@ -128,6 +124,7 @@ def signout(request):
 @ensure_csrf_cookie
 def create_quiz(request):
     if request.method == 'POST':
+        username=  request.user
         quiz_name = request.POST.get('quiz_name')
         category = request.POST.get('category')
         number_of_questions = request.POST.get('number_of_questions')
@@ -145,16 +142,15 @@ def create_quiz(request):
     return redirect('home')
 
 
-#the quiz attender starts answering the questions
-@api_view(['GET', 'POST', 'PUT', 'DELETE'])
-@ensure_csrf_cookie
-def start_quiz(request, quiz_name):
-    quiz_name = quiz_name
-    question = Questions.objects.filter(quiz_name=quiz_name).values_list()
-    return render(request, "start_quiz.html", {
-        "question_list": question,
-        # "number_of_question": len(question),
-    })
+#the quiz presenter is creating the Quiz details and posting it
+# @api_view(['GET', 'POST', 'PUT', 'DELETE'])
+# @ensure_csrf_cookie
+# def delete_quiz(request, quiz_name):
+#     quiz_name = request.POST.get("quiz_name")
+#     quiz = Quiz.objects.get(quiz_name=quiz_name)
+#     print(quiz)
+#     quiz.delete()
+#     messages.success(request, "Quiz has been succesfully deleted...")
 
 
 #the quiz presenter making the question
@@ -166,7 +162,6 @@ def add_questions(request):
     user_list = Quiz.objects.filter(username=request.user)
     for user in user_list:
         quiz_name = user.quiz_name
-        print(quiz_name)
     if request.method == 'GET':
         return render(request, "add_questions.html", {
             "user_role": user_role,
@@ -181,7 +176,6 @@ def add_questions(request):
         correct_answer = request.POST.get('correct_answer')
         username = CustomUser.objects.get(username=request.user)
         quiz_name = Quiz.objects.get(quiz_name=quiz_name)
-        print("quiz",quiz_name.quiz_name)
         question = Questions.objects.create(username=str(username), quiz_name=quiz_name.quiz_name,
                                             question=question, option1=option1, option2=option2,
                                             option3=option3, option4=option4, correct_answer=correct_answer)
@@ -196,3 +190,34 @@ def add_questions(request):
         "user_role": user_role,
         "quiz_name":quiz_name,
     })
+
+
+#the quiz attender starts answering the questions
+@api_view(['GET', 'POST', 'PUT', 'DELETE'])
+@ensure_csrf_cookie
+def start_quiz(request, quiz_name):
+    question_list = Questions.objects.filter(quiz_name=quiz_name).values_list()
+    for question in question_list:
+        if request.method == 'GET':
+            quiz_name = quiz_name
+            return render(request, "start_quiz.html", {
+                "question": question,
+                # "number_of_question": len(question),
+            })
+        
+#store quiz answers
+@api_view(['GET', 'POST', 'PUT', 'DELETE'])
+@ensure_csrf_cookie
+def store_answers(request, quiz_name, correct_answer):
+    question_list = Questions.objects.filter(quiz_name=quiz_name).values_list()
+    if request.method == 'POST':
+        # checked_values = request.POST.getlist('option')
+        for question in question_list:
+            if question[8] == correct_answer:
+                print("matched")
+                response = redirect('/start_quiz/{quiz_name}')
+                response.set_cookie(key='username', value='logged_out')
+                return response
+            else:
+                print("not matched")
+    return redirect(f'/start_quiz/?quiz_name={quiz_name}')

@@ -62,8 +62,12 @@
                 {% csrf_token %}
                 <button type="submit" class="btn btn-primary mb-3" name="quiz_name">Add Questions</button>
               </form>
-              <button type="submit" class="btn btn-danger mb-3" name="delete-quiz">Delete Quiz</button>
-              <hr>          
+              {% comment %} <form action="#" method="POST">
+                {% csrf_token %} {% endcomment %}
+                <button type="submit" class="btn btn-danger mb-3" name="quiz_name">Delete Quiz</button>
+              {% comment %} </form> {% endcomment %}
+              {% comment %} <a href="{% url 'delete_quiz' quiz.quiz_name %}" button type="submit" class="btn btn-danger mb-3" name="delete_quiz">Delete Quiz</button></a>
+              <hr>           {% endcomment %}
               {% else %}
               <a button type="submit" class="btn btn-primary mb-3" href='{% url "start_quiz" quiz.quiz_name %}'> Start Quiz </button></a>
             </hr>

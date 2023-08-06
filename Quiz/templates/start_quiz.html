@@ -8,8 +8,10 @@
         <i class="fa fa-angle-left mt-1 mr-1"></i>&nbsp;Exit the quiz
     </button></a></br>
     <h4>MCQ Quiz</h4>
-{% for question in question_list %}
+{% comment %} {% for question in question_list %} {% endcomment %}
 </div>
+<form method='POST' action="{% url 'store_answers' question.2 question.8%}">
+    {% csrf_token %}
     <div class="d-flex justify-content-center row">
         <div class="col-md-10 col-lg-10">
             <div class="border">
@@ -25,37 +27,38 @@
                     </div>
                     <div class="ans ml-2">
                         <label class="radio">
-                            <input type="checkbox" name="answer" value="brazil">
+                            <input type="checkbox" name="option" value="{{question.4}}">
                             <span>{{question.4}}</span>
                         </label>
                     </div>
                     <div class="ans ml-2">
                         <label class="radio">
-                            <input type="checkbox" name="answer" value="Germany">
+                            <input type="checkbox" name="option" value="{{question.5}}">
                             <span>{{question.5}}</span>
                         </label>
                     </div>
                     <div class="ans ml-2">
                         <label class="radio">
-                            <input type="checkbox" name="answer" value="Indonesia">
+                            <input type="checkbox" name="option" value="{{question.6}}">
                             <span>{{question.6}}</span>
                         </label>
                     </div>
                     <div class="ans ml-2">
                         <label class="radio">
-                            <input type="checkbox" name="answer" value="Russia">
+                            <input type="checkbox" name="option" value="{{question.7}}">
                             <span>{{question.7}}</span>
                         </label>
                     </div>
                 </div>
                 <div class="d-flex flex-row justify-content-between align-items-center p-3 bg-white">
-                    <button class="btn btn-primary d-flex align-items-center btn-primary" type="button">
-                        <i class="fa fa-angle-left mt-1 mr-1"></i>&nbsp;Submit
+                    <button class="btn btn-primary d-flex align-items-center btn-primary" type="submit">
+                        <i class="fa fa-angle-left mt-1 mr-1"></i>&nbsp;Submit and Next Question
                     </button>
                 </div>
             </div>
         </div>
-        {% endfor %}
+    </form>
+        {% comment %} {% endfor %} {% endcomment %}
         <script>
             // JavaScript code to enforce selection of only one option
             const checkboxes = document.querySelectorAll('input[type="checkbox"]');

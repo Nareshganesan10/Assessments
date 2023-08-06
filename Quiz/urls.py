@@ -8,5 +8,7 @@ urlpatterns = [
     path("signout/", view=views.signout, name="signout"),
     path("create_quiz/", view=views.create_quiz, name="create_quiz"),
     path("start_quiz/<str:quiz_name>", view=views.start_quiz, name="start_quiz"),
+    # path("delete_quiz/", view=views.delete_quiz, name="start_quiz"),
     path("add_questions/", view=views.add_questions, name="add_questions"),
+    path("store_answers/<str:quiz_name>/<str:correct_answer>/S", view=views.store_answers, name="store_answers"),
 ]
